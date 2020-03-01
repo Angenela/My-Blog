@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/myCSS.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <style>
+        #context {
+            margin-top: 10px;
+        }
+
+        #text img {
+            width: 60%;
+        }
+    </style>
+
+</head>
+<body>
+
+<div id="context">
+    <!--    菜单-->
+    <div th:replace="index::sticky"></div>
+    <div th:replace="index::menu"></div>
+
+    <div class="ui grid">
+        <div class="ui one wide column"></div>
+
+        <div class="ui fourteen wide column">
+            <div th:replace="article :: articleMenu"></div>
+            <div th:replace="article :: classify"></div>
+
+            <!--文章内容-->
+            <div class="ui segment">
+                <h1 class="ui center aligned header" th:text="${content.title}"></h1>
+                <div class="date" th:text="${#dates.format(content.createTime,'yyyy-MM-dd')}"></div>
+                <div style="margin-top: 10px;"><i class="blue tags icon" th:text="${content.tags}"></i></div>
+                <div class="ui divider"></div>
+                <div th:text="${content.description}" style="font-weight: bolder;"></div>
+
+                <div class="ui divider"></div>
+
+
+                <div id="text" th:utext="${content.text}"></div>
+
+
+                <a th:if="${session.userName!=null}" th:href="@{'/edit/'+${num}}" class="ui yellow button"
+                   style="margin-top: 40px;">
+                    <i class="edit icon"></i> 编辑
+                </a>
+
+                <div class="ui divider"></div>
+
+                <!--评论-->
+                <div th:if="${!content.comment}">
+                    <div class="ui red big message"><i class="ui times circle icon"></i>未开启评论</div>
+                </div>
+
+                <div th:if="${content.comment}">
+                    <div th:if="${comments.size() == 0}">
+                        <div class="ui green big message"><i class="ui edit icon"></i>暂无评论</div>
+                    </div>
+                    <div class="ui minimal comments">
+                        <div class="comment" th:each="comment:${comments}" th:if="${comment.agree}"
+                             style="margin-bottom: 13px;">
+                            <a class="avatar">
+                                <img th:src="@{/image/2.jpg}">
+                            </a>
+                            <div class="content">
+                                <a class="author" th:text="${comment.name==null?'匿名':comment.name}"></a>
+                                <div class="metadata">
+                                <span class="date"
+                                      th:text="${#dates.format(comment.createTime,'yyyy-mm-dd hh-mm-ss')}"></span>
+                                </div>
+                                <div class="text" th:text="${comment.text}"></div>
+                                <div class="actions dc" th:if="${session.userName != null}" data-content="你将删除这个评论！">
+                                    <a class="reply"><i th:data="${comment.id}" class="ui red close icon"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui divider"></div>
+                <!--添加评论-->
+                <form class="ui form" action="/comment" method="post" th:if="${content.comment}">
+                    <input type="hidden" name="articleId" th:value="${num}">
+                    <div class="ui right labeled left icon input" style="margin-bottom: 15px;">
+                        <i class="user icon"></i>
+                        <input type="text" name="name" placeholder="你可以留下一个名字">
+                        <a class="ui tag label">Name </a>
+                    </div>
+                    <div class="ui right labeled left icon input" style="margin-bottom: 15px; margin-left: 240px">
+                        <i class="qq icon"></i>
+                        <input type="text" name="qq" placeholder="你可以留下你的QQ">
+                        <a class="ui tag label">QQ Number </a>
+                    </div>
+                    <div class="field">
+                        <textarea name="text"></textarea>
+                    </div>
+                    <div class="ui blue labeled submit icon button"><i class="icon edit"></i> Add Reply</div>
+                </form>
+
+                <div class="ui error message" style="display: none; margin-top: 20px">
+                    <i class="close icon"></i>
+                    <div class="header">你的输入有问题</div>
+                    <ul class="list"></ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="ui one wide column"></div>
+    </div>
+
+</div>
+
+<!--    页尾-->
+<div th:replace="index::pageTail"></div>
+
+<!--成功评论弹出-->
+<div class="ui mini modal">
+    <div class="ui content">
+        <i class="huge check green icon"></i>
+        提交成功，等待审核
+    </div>
+    <div class="actions">
+        <div class="ui green ok inverted button">
+            <i class="checkmark icon"></i>
+            Yes
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+<script th:src="@{/js/myJs.js}"></script>
+<script>
+    //提交按钮事件
+    $('.submit.button').click(function () {
+        let data = $('.form').serializeArray();
+
+        $.ajax({
+            data: formatArray(data, 'json'),
+            url: '/comment',
+            contentType: 'application/json',
+            dataType: 'JSON',
+            type: 'POST',
+            success: function (data) {
+                let state = data.state;
+                if (state == 1) {
+                    let elementsByClassNameElement = document.getElementsByClassName('form')[0];
+                    elementsByClassNameElement.reset();
+                    $('.mini.modal').modal('show');
+                } else {
+                    let error = $('.error.message');
+                    let errorList = $('.error.message .list');
+                    errorList.empty();
+                    let message = data.message;
+                    for (let messageKey in message) {
+                        errorList.append($('<li>' + message[messageKey] + '</li>'));
+                    }
+                    error.show();
+                    $('.error.message').transition('bounce');
+                }
+            }
+        })
+
+    })
+
+    //语言框下拉
+    $('.ui.dropdown.item').dropdown({
+        on: 'hover'
+    });
+
+    //错误消息关闭
+    $('.message .close').on('click', function () {
+        $(this)
+            .closest('.message')
+            .transition('fade');
+    });
+
+    //设置评论删除
+    $('.comments .comment .actions .close').click(function () {
+        this.parentNode.parentNode.parentNode.parentNode.remove();
+
+        $.ajax({
+            type: 'POST',
+            url: '/deleteComment/' + this.getAttribute('data'),
+            success: function (data) {
+                console.log(data);
+            }
+        })
+    })
+
+    //设置评论删除提示
+    $('.actions.dc').popup();
+</script>
+
+</body>
+</html>

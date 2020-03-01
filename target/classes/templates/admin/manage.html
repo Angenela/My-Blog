@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/myCSS.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <style>
+        p{
+            display: inline-block;
+            margin-right: 25px;
+        }
+    </style>
+</head>
+<body>
+<h1>管理页面</h1>
+
+评论管理：
+<div>
+    <div th:each="comment:${comments}">
+        <p th:text="${comment.name}"></p>
+        <p th:text="${comment.articleId}"></p>
+        <p th:text="${#dates.format(comment.createTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
+        <p th:text="${comment.text}"></p>
+        <p th:text="${comment.qq}"></p>
+        <i th:data="${comment.id}" class="link red big x icon"></i>
+        <button th:data="${comment.id}" class="agree">通过</button>
+    </div>
+</div>
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+<script>
+    let length = $('.agree').length;
+
+    for (let i=0; i<length; i++){
+        $('.agree')[i].onclick = function () {
+            let data = {
+                id: this.getAttribute("data")
+            };
+
+            $.ajax({
+                url: '/agree',
+                type: 'POST',
+                data: data,
+            });
+
+            this.parentElement.remove();
+        }
+    }
+
+    //设置评论删除
+    $('.x').click(function () {
+        this.parentNode.remove();
+
+        $.ajax({
+            type: 'POST',
+            url: '/deleteComment/' + this.getAttribute('data'),
+            success: function (data) {
+                console.log(data);
+            }
+        })
+    })
+</script>
+</body>
+</html>

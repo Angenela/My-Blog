@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="0.422">
+    <CLASSES>
+      <root url="file://D:/Maven/apache-maven-3.6.3-bin/apache-maven-3.6.3/repository/com/vladsch/flexmark/flexmark-ext-gfm-tables/0.42.8" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://D:/Maven/apache-maven-3.6.3-bin/apache-maven-3.6.3/repository/com/vladsch/flexmark/flexmark-ext-gfm-tables/0.42.8" recursive="false" />
+  </library>
+</component>

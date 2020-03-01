@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>首页</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="css/myCSS.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+</head>
+<body>
+
+<div id="context">
+    <!--    粘性图标-->
+    <div th:fragment="sticky">
+        <i class="ui sticky bordered inverted black massive blue link list icon "></i>
+    </div>
+    <!--    菜单-->
+    <div th:fragment="menu" class="ui basic modal">
+        <div class="ui equal width internally divided grid">
+            <div class="ui column">
+                <a href="/"><i class="massive link blue home icon"></i></a>
+            </div>
+            <div class="ui column">
+                <a href="/article"><i class="massive link orange book icon"></i></a>
+            </div>
+            <div class="ui column">
+                <a href="/other"><i class="massive link grey paper plane icon"></i></a>
+            </div>
+        </div>
+        <div class="ui equal width internally divided grid" id="description">
+            <div class="ui column s">首页</div>
+            <div class="ui column w">文章</div>
+            <div class="ui column q"
+            >其它</div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>Close
+            </div>
+        </div>
+    </div>
+
+    <!--    首页图片-->
+    <img id="firstImg" src="image/1.jpg" alt="">
+
+    <!--    内容-->
+    <div id="content" class="ui grid">
+        <div class="ui two wide column"></div>
+        <div class="ui twelve wide column">
+            <!--    介绍-->
+            <div>
+                <h2 class="ui horizontal divider header"><i class="tag icon"></i> 介绍 </h2>
+                <div class="ui grid">
+                    <div class="ui small circular rotate reveal image three wide column">
+                        <img src="https://semantic-ui.com//images/wireframe/square-image.png" class="visible content">
+                        <img src="image/2.jpg" class="hidden content">
+                    </div>
+                    <div class="ui one wide column"></div>
+                    <div class="ui twelve wide column">
+                        某不知名大学的计算机学生，热爱敲代码，对未来很迷茫，但又十分期待。爱好：看看动漫，逛逛B站，敲敲代码。是一个标准的宅男。
+                    </div>
+                </div>
+            </div>
+
+            <!--    时间线-->
+            <div id="timeLine">
+                <h2 class="ui horizontal divider header"><i class="rocket icon"></i> 时间线 </h2>
+                <div class="desc">
+                    <ul class="layui-timeline">
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                <div class="layui-timeline-title">复习所学知识</div>
+                            </div>
+                        </li>
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                <div class="layui-timeline-title">2019年12月，Spring相关</div>
+                            </div>
+                        </li>
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                <div class="layui-timeline-title">2019年10月，前端相关</div>
+                            </div>
+                        </li>
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                <div class="layui-timeline-title">2019年9月，接触Java（Java天下第一！）</div>
+                            </div>
+                        </li>
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                <div class="layui-timeline-title">2019年8月，接触数据结构</div>
+                            </div>
+                        </li>
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                <div class="layui-timeline-title">2019年7月，接触C语言</div>
+                            </div>
+                        </li>
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                <div class="layui-timeline-title">更久前。。。</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="ui two wide column"></div>
+    </div>
+
+    <!--     页尾-->
+    <div id="pageTail" th:fragment="pageTail" class="ui grid">
+        <div class="ui two wide column"></div>
+        <div class="ui twelve wide column">
+            <div><i class="big qq icon"></i>： 2392429828</div>
+            <div><i class="big envelope outline icon"></i>： 2392429828@qq.com</div>
+            <div><i class="big github icon"></i>： <a href="https://github.com/Angenela">Angenela</a>
+            </div>
+            <div>使用的UI框架：
+                <a href="https://semantic-ui.com/">SemanticUI</a>、
+                <a href="https://www.layui.com">LayUI</a>
+            </div>
+        </div>
+        <div class="ui two wide column"></div>
+    </div>
+
+</div>
+
+<script src="layui/layui.all.js"></script>
+<script src="js/myJs.js"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Simple example - Editor.md examples</title>
+    <link rel="stylesheet" th:href="@{/editor/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/editor/css/editormd.css}"/>
+</head>
+<body>
+
+<form th:action="@{'/edit/'+${article.id}}" method="post">
+
+    标题： <input type="text" name="title" th:value="${article.title}"><br>
+    描述： <input type="text" name="description" th:value="${article.description}">
+    tag： <input type="text" name="tags" th:value="${article.tags}">
+    <div id="test-editormd">
+        <textarea style="display:none;" id="textContent" name="text" th:text="${article.text}"></textarea>
+<!--        &lt;!&ndash; 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 &ndash;&gt;-->
+<!--        <textarea id="text" class="editormd-html-textarea" name="text"></textarea>-->
+    </div>
+
+    是否开启评论：<input type="checkbox" name="comment" value="true"  th:checked="${article.comment}">
+    <br>
+    <button type="submit">提交</button>
+</form>
+
+
+<script th:src="@{/editor/js/jquery.min.js}"></script>
+<script th:src="@{/editor/js/editormd.min.js}"></script>
+<script type="text/javascript">
+    var testEditor;
+    $(function () {
+        testEditor = editormd("test-editormd", {
+            width: "90%",
+            height: 640,
+            syncScrolling: "single",
+            path: "http://localhost:8080/editor/lib/",
+            imageUpload: true,
+            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL: "/upload/image",
+            //这个配置在simple.html中并没有，但是为了能够提交表单，使用这个配置可以让构造出来的HTML代码直接在第二个隐藏的textarea域中，方便post提交表单。
+            saveHTMLToTextarea: true
+            // previewTheme : "dark"
+        });
+    });
+
+    let href = location.href;
+    let status = href.substring(href.lastIndexOf('=')+1);
+    if(status == 1){
+        alert("发布成功")
+    };
+</script>
+</body>
+</html>

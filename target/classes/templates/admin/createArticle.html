@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Simple example - Editor.md examples</title>
+    <link rel="stylesheet" th:href="@{/editor/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/editor/css/editormd.css}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+</head>
+<body>
+
+<div class="ui inverted vertical menu">
+    <a class="item">Home </a>
+    <a class="item active">Messages </a>
+    <a class="item">好友 </a>
+</div>
+
+<form action="/admin/article/create" method="post">
+
+    标题： <input type="text" name="title"><br>
+    描述： <input type="text" name="description">
+    tag： <input type="text" name="tags">
+    <div id="test-editormd">
+        <textarea style="display:none;" id="textContent" name="text"></textarea>
+        <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
+<!--        <textarea id="text" class="editormd-html-textarea" name="text"></textarea>-->
+    </div>
+
+    是否开启评论：<input type="checkbox" name="comment" value="true">
+    <br>
+    <button type="submit">提交</button>
+</form>
+
+
+<script th:src="@{/editor/js/jquery.min.js}"></script>
+<script th:src="@{/editor/js/editormd.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+<script type="text/javascript">
+    var testEditor;
+    //获取工程路径
+    let url = location.href;
+    let index = 0;
+    let count = 0;
+    while (!(count == 3)){
+        if (url[index] == '/'){
+            count++;
+        }
+        index++;
+    }
+    url = url.slice(0,index);
+    $(function () {
+        testEditor = editormd("test-editormd", {
+            width: "90%",
+            height: 640,
+            syncScrolling: "single",
+            path: url+"editor/lib/",
+            imageUpload: true,
+            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL: "/upload/image",
+            //这个配置在simple.html中并没有，但是为了能够提交表单，使用这个配置可以让构造出来的HTML代码直接在第二个隐藏的textarea域中，方便post提交表单。
+            saveHTMLToTextarea: true
+            // previewTheme : "dark"
+        });
+    });
+
+    let href = location.href;
+    let status = href.substring(href.lastIndexOf('=')+1);
+    if(status == 1){
+        alert("发布成功")
+    };
+</script>
+</body>
+</html>

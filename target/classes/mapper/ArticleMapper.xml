@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.angenela.mapper.ArticleMapper">
+    <select id="byId" resultType="Article">
+        select * from article where id = #{id}
+    </select>
+
+    <select id="count" resultType="int">
+        select count(id) from article
+    </select>
+
+    <select id="countByTag" resultType="int">
+        select count(id) from article where tags = #{name}
+    </select>
+
+    <select id="selectAll" resultType="Article">
+        select * from article order by create_time desc
+    </select>
+
+    <select id="classifyByTagName" resultType="Article">
+        select * from article where tags = #{name} order by create_time desc
+    </select>
+
+    <insert id="createArticle" parameterType="Article">
+        insert into article(create_time,text,comment,title,description,tags)
+        values (#{createTime},#{text},#{comment},#{title},#{description},#{tags})
+    </insert>
+
+    <update id="updateArticle" parameterType="Article">
+        update article
+        set title = #{title}, description = #{description}, text = #{text}, tags = #{tags}, comment = #{comment}
+        where id = #{id};
+    </update>
+</mapper>

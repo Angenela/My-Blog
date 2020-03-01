@@ -1,0 +1,40 @@
+swagger:
+  show: true
+
+mybatis:
+  mapper-locations: mapper/*.xml
+  type-aliases-package: com/angenela/dao
+  configuration:
+    map-underscore-to-camel-case: true
+
+spring:
+  datasource:
+    username: root
+    password: 123
+    url: jdbc:mysql://localhost:3306/angenela?useSSL=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Hongkong
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+logging:
+  config: classpath:log4j2.xml
+
+img:
+  location: static/uploadImg
+  url: http://localhost:8080/uploadImg/
+
+
+server:
+  servlet:
+    session:
+      timeout: 30
+      cookie:
+        max-age: 1800
+
+  tomcat:
+    connection-timeout: 10000
+
+# 分页配置
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql

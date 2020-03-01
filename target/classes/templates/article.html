@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/myCSS.css}">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <style>
+        #context {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="context" class="ui grid">
+    <!--    菜单-->
+    <div th:replace="index::sticky"></div>
+    <div th:replace="index::menu"></div>
+
+    <div class="ui one wide column"></div>
+
+    <div class="ui fourteen wide column">
+        <!-- 文章菜单-->
+        <div th:fragment="articleMenu" class="ui pointing menu">
+            <a href="/article" th:class="${active==null?'item active':'item'}"><font style="vertical-align: inherit;"><font
+                    style="vertical-align: inherit;"><i class="blue book icon"></i>最新文章 </font></font></a>
+            <a th:class="${active==2?'item active':'item'}">
+                <div class="classify ui"><i class="link yellow tags icon"></i>文章分类</div>
+            </a>
+            <div class="right menu">
+                <div class="ui dropdown item">语言 <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <a class="item">中文</a>
+                        <a class="item">English</a>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="ui disabled transparent icon input">
+                        <input type="text" placeholder="暂不开放。。。没必要">
+                        <i class="search link icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--文章分类弹出-->
+        <div th:fragment="classify" class="ui fluid popup top left transition hidden">
+            <div class="ui equal width center aligned grid">
+                <div class="ui column" th:if="${tags.size()<=5}" th:each="tag:${tags}">
+                    <a th:href="@{'/classify/'+${tag.name}}" th:text="${tag.name}"></a>
+                    <a class="ui orange circular label" th:text="${tag.count}"></a>
+                </div>
+                <div class="ui column" th:if="${tags.size()>5}" th:each="index:${#numbers.sequence(0,4)}">
+                    <a th:href="@{'/classify/'+${tags.get(index).name}}" th:text="${tags.get(index).count}"></a>
+                    <a class="ui orange circular label" th:text="${tags.get(index).count}"></a>
+                </div>
+                <div class="ui column" th:if="${tags.size()>5}" th:each="index:${#numbers.sequence(5,9)}">
+                    <a th:href="@{'/classify/'+${tags.get(index).name}}" th:text="${tags.get(index).count}"></a>
+                    <a class="ui orange circular label" th:text="${tags.get(index).count}"></a>
+                </div>
+            </div>
+        </div>
+
+        <!--    文章-->
+        <div class="ui segment">
+            <div class="ui feed" th:each="page:${pageInfo.list}">
+                <div class="event">
+                    <div class="label">
+                        <img th:src="@{/image/2.jpg}">
+                    </div>
+                    <div class="content">
+                        <div class="date" th:text="${#dates.format(page.createTime,'yyyy-MM-dd')}"></div>
+                        <div class="summary"><a th:text="${page.title}" th:href="@{'/content/'+${page.id}}"></a></div>
+                        <div class="extra text" th:text="${page.description}"></div>
+                    </div>
+                </div>
+                <div class="ui divider"></div>
+            </div>
+
+            <!--Previous-->
+            <a th:href="@{/article(pageNum=${pageInfo.pageNum - 1})}">
+                <div class="ui animated button" tabindex="0"
+                     th:if="${pageInfo.isHasPreviousPage()}">
+                    <div class="visible content">Next</div>
+                    <div class="hidden content">
+                        <i class="arrow left icon"></i>
+                    </div>
+                </div>
+            </a>
+            <!--    分页-->
+            <div class="ui pagination menu splitPage">
+                <a th:each="pageNum:${pageInfo.navigatepageNums}"
+                   th:text="${pageNum}"
+                   th:href="@{/article(pageNum=${pageNum})}"
+                   th:class="${pageNum==pageInfo.pageNum?'ui active item':'ui item'}">
+                </a>
+            </div>
+            <!--Next-->
+            <a th:href="@{/article(pageNum=${pageInfo.pageNum+1})}">
+                <div class="ui animated button" tabindex="0"
+                     th:if="${pageInfo.isHasNextPage()}">
+                    <div class="visible content">Next</div>
+                    <div class="hidden content">
+                        <i class="ui link arrow right icon"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="ui one wide column"></div>
+</div>
+
+<!--    页尾-->
+<div th:replace="index::pageTail"></div>
+
+<script th:src="@{/layui/layui.all.js}"></script>
+<script th:src="@{/js/myJs.js}"></script>
+<script>
+    $('.ui.dropdown.item').dropdown({
+        on: 'hover'
+    });
+
+</script>
+</body>
+</html>

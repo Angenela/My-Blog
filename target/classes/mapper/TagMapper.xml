@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.angenela.mapper.TagMapper">
+    <select id="getTagByName" resultType="Tag">
+        select * from tag where name = #{name}
+    </select>
+
+    <select id="getAll" resultType="Tag">
+        select * from tag
+    </select>
+
+    <insert id="addTag" parameterType="Tag">
+        insert into tag(name, count) values (#{name},#{count})
+    </insert>
+
+    <update id="addCountById">
+        update tag set count = count + 1 where id = #{id}
+    </update>
+
+    <update id="addCountByName">
+        update tag set count = count + 1 where name = #{name}
+    </update>
+</mapper>
